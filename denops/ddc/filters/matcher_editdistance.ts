@@ -5,12 +5,14 @@ import {
   DdcOptions,
   FilterOptions,
   SourceOptions,
+  Denops,
 } from "./deps.ts";
 import { editDistance } from "./editDistance.ts";
-import { Denops } from "./deps.ts";
 
 type Params = {
   limit: number;
+  showScore: boolean;
+  diffLen: number;
 };
 
 type item = {
@@ -32,28 +34,27 @@ export class Filter extends BaseFilter {
     if (!completeStr) {
       return Promise.resolve(candidates);
     }
-    let items: item[] = candidates.map((c) => {
-      return { candidate: c, ed: editDistance(c.word, completeStr) };
-    });
-    items = items.sort((a, b) => a.ed - b.ed).filter((i) =>
-      i.ed <= (filterParams.limit as number) &&
-      i.candidate.word.startsWith(completeStr[0])
-    );
+    const params = filterParams as Params;
+    let items: item[] = candidates.filter((c) =>
+      c.word.length >= completeStr.length + params.diffLen &&
+      c.word.startsWith(completeStr[0])
+    ).map((c) => ({ candidate: c, ed: editDistance(c.word, completeStr) }));
+
+    items = items.filter((i) => i.ed <= params.limit)
+      .sort((a, b) => a.ed - b.ed);
     return Promise.resolve(items.map((i) => {
-      i.candidate.abbr = i.candidate.word + i.ed.toString();
+      if (params.showScore) {
+        i.candidate.menu = i.ed.toString();
+      }
       return i.candidate;
     }));
-    // return Promise.resolve(
-    //   candidates.filter((c) =>
-    //     editDistance(c.word, completeStr) <= (filterParams.limit as number) &&
-    //     c.word[0] == completeStr[0]
-    //   ),
-    // );
   }
 
   params(): Record<string, unknown> {
     const params: Params = {
       limit: 3,
+      showScore: false,
+      diffLen: -1,
     };
     return params as unknown as Record<string, unknown>;
   }
