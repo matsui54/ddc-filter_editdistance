@@ -1,12 +1,7 @@
 import {
   BaseFilter,
   Candidate,
-  Context,
-  DdcOptions,
-  FilterOptions,
-  SourceOptions,
 } from "./deps.ts";
-import { Denops } from "./deps.ts";
 import { editDistance } from "./editDistance.ts";
 
 type item = {
@@ -15,21 +10,15 @@ type item = {
 };
 
 export class Filter extends BaseFilter {
-  filter(
-    _denops: Denops,
-    _context: Context,
-    _options: DdcOptions,
-    _sourceOptions: SourceOptions,
-    _filterOptions: FilterOptions,
-    _filterParams: Record<string, unknown>,
-    completeStr: string,
-    candidates: Candidate[],
-  ): Promise<Candidate[]> {
-    if (!completeStr) {
-      return Promise.resolve(candidates);
+  filter(args: {
+    completeStr: string;
+    candidates: Candidate[];
+  }): Promise<Candidate[]> {
+    if (!args.completeStr) {
+      return Promise.resolve(args.candidates);
     }
-    let items: item[] = candidates.map((c) => {
-      return { candidate: c, ed: editDistance(c.word, completeStr) };
+    let items: item[] = args.candidates.map((c) => {
+      return { candidate: c, ed: editDistance(c.word, args.completeStr) };
     });
     items.sort((a, b) => a.ed - b.ed);
     return Promise.resolve(items.map((i) => i.candidate));
