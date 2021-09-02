@@ -1,13 +1,5 @@
-import {
-  assertEquals,
-  Candidate,
-  Context,
-  DdcOptions,
-  Denops,
-  FilterOptions,
-  SourceOptions,
-} from "./deps.ts";
-import { Filter } from "./matcher_editdistance.ts";
+import { assertEquals, Candidate } from "./deps.ts";
+import { Filter } from "../ddc-filters/matcher_editdistance.ts";
 import { editDistance } from "./editDistance.ts";
 
 export async function filterWrapper(
@@ -17,16 +9,11 @@ export async function filterWrapper(
   diffLen: number = -1,
 ): Promise<Candidate[]> {
   let filter = new Filter();
-  return filter.filter(
-    {} as Denops,
-    {} as Context,
-    {} as DdcOptions,
-    {} as SourceOptions,
-    {} as FilterOptions,
-    { "limit": limit, "showScore": true, "diffLen": diffLen },
-    complete_str,
+  return filter.filter({
+    filterParams: { "limit": limit, "showScore": true, "diffLen": diffLen },
+    completeStr: complete_str,
     candidates,
-  );
+  });
 }
 
 Deno.test("calculate edit distance", async () => {
