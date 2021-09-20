@@ -1,5 +1,5 @@
 import { assertEquals, Candidate } from "./deps.ts";
-import { Filter } from "../ddc-filters/matcher_editdistance.ts";
+import { Filter } from "../@ddc-filters/matcher_editdistance.ts";
 import { editDistance } from "./editDistance.ts";
 
 export async function filterWrapper(
