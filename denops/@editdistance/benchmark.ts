@@ -2,7 +2,7 @@ import { Candidate } from "./deps.ts";
 import {
   bench,
   runBenchmarks,
-} from "https://deno.land/std@0.106.0/testing/bench.ts";
+} from "https://deno.land/std@0.108.0/testing/bench.ts";
 import { filterWrapper } from "./test.ts";
 
 function gatherCandidates(
