@@ -1,7 +1,4 @@
-import {
-  BaseFilter,
-  Candidate,
-} from "../@editdistance/deps.ts";
+import { BaseFilter, Candidate } from "../@editdistance/deps.ts";
 import { editDistance } from "../@editdistance//editDistance.ts";
 
 type item = {
