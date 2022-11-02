@@ -1,4 +1,4 @@
-import { BaseFilter, Candidate } from "../@editdistance/deps.ts";
+import { BaseFilter, Item } from "../@editdistance/deps.ts";
 import { editDistance } from "../@editdistance/editDistance.ts";
 
 type Params = {
@@ -8,21 +8,21 @@ type Params = {
 };
 
 type item = {
-  candidate: Candidate;
+  candidate: Item;
   ed: number;
 };
 
-export class Filter extends BaseFilter {
+export class Filter extends BaseFilter<Params> {
   filter(args: {
-    filterParams: Record<string, unknown>;
+    filterParams: Params;
     completeStr: string;
-    candidates: Candidate[];
-  }): Promise<Candidate[]> {
+    items: Item[];
+  }): Promise<Item[]> {
     if (!args.completeStr) {
-      return Promise.resolve(args.candidates);
+      return Promise.resolve(args.items);
     }
     const params = args.filterParams as Params;
-    let items: item[] = args.candidates.filter((c) =>
+    let items: item[] = args.items.filter((c) =>
       c.word.length >= args.completeStr.length + params.diffLen &&
       c.word.startsWith(args.completeStr[0])
     ).map((c) => ({
@@ -40,12 +40,11 @@ export class Filter extends BaseFilter {
     }));
   }
 
-  params(): Record<string, unknown> {
-    const params: Params = {
+  params(): Params {
+    return {
       limit: 3,
       showScore: false,
       diffLen: -1,
     };
-    return params as unknown as Record<string, unknown>;
   }
 }
