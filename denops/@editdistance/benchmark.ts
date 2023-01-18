@@ -1,13 +1,13 @@
-import { Candidate } from "./deps.ts";
-import {
-  bench,
-  runBenchmarks,
-} from "https://deno.land/std@0.171.0/testing/bench.ts";
+import { Item } from "./deps.ts";
+// import {
+//   bench,
+//   runBenchmarks,
+// } from "https://deno.land/std@0.173.0/testing/bench.ts";
 import { filterWrapper } from "./test.ts";
 
 function gatherCandidates(
   dicts: string[],
-): Candidate[] {
+): Item[] {
   return dicts.map((dict) => Deno.readTextFileSync(dict).split("\n"))
     .flatMap((texts) => texts)
     .map((word) => ({ word }));
@@ -15,14 +15,10 @@ function gatherCandidates(
 
 const candidates = gatherCandidates(["/usr/share/dict/words"]);
 console.log(`number of candidates: ${candidates.length}`);
-bench({
+Deno.bench({
   name: "filterLargeCandidates",
-  runs: 10,
-  func(b): void {
-    b.start();
-    Promise.resolve(filterWrapper("e", candidates, 2));
-    b.stop();
+  // runs: 10,
+  fn: () => {
+    filterWrapper("e", candidates, 2);
   },
 });
-
-runBenchmarks();

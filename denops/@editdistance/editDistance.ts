@@ -1,4 +1,4 @@
-let L: number[][] = new Array(200 + 1);
+const L: number[][] = new Array(200 + 1);
 for (let i = 0; i <= 200; i++) {
   L[i] = new Array(200 + 1);
   L[i][0] = i;

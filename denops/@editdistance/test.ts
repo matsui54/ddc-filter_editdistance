@@ -1,22 +1,22 @@
-import { assertEquals, Candidate } from "./deps.ts";
+import { assertEquals, Item } from "./deps.ts";
 import { Filter } from "../@ddc-filters/matcher_editdistance.ts";
 import { editDistance } from "./editDistance.ts";
 
-export async function filterWrapper(
+export function filterWrapper(
   complete_str: string,
-  candidates: Candidate[],
+  candidates: Item[],
   limit: number,
-  diffLen: number = -1,
-): Promise<Candidate[]> {
-  let filter = new Filter();
+  diffLen = -1,
+): Promise<Item[]> {
+  const filter = new Filter();
   return filter.filter({
     filterParams: { "limit": limit, "showScore": true, "diffLen": diffLen },
     completeStr: complete_str,
-    candidates,
+    items: candidates,
   });
 }
 
-Deno.test("calculate edit distance", async () => {
+Deno.test("calculate edit distance", () => {
   assertEquals(editDistance("b", "a"), 1);
   assertEquals(editDistance("a", "a"), 0);
   assertEquals(
@@ -33,7 +33,7 @@ Deno.test("calculate edit distance", async () => {
 });
 
 Deno.test("filter", async () => {
-  let testCandidates = [
+  const testCandidates = [
     { "word": "foobar" },
     { "word": "fooBar" },
     { "word": "Foobar" },
