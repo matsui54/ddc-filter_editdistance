@@ -1,8 +1,4 @@
 import { Item } from "./deps.ts";
-// import {
-//   bench,
-//   runBenchmarks,
-// } from "https://deno.land/std@0.173.0/testing/bench.ts";
 import { filterWrapper } from "./test.ts";
 
 function gatherCandidates(
